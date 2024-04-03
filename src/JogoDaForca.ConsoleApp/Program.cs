@@ -37,26 +37,34 @@
         }
         static void IniciarJogo(string palavra) {
             int erros = 0;
-            string chute, exibicao = new string('_', palavra.Length);
+            string chute, letrasUsadas = "", exibicao = new string('_', palavra.Length);
 
             while (true) {
                 MontarForca(erros);
                 Console.WriteLine("\n " + exibicao);
 
                 if (!exibicao.Contains("_")) {
-                    Console.WriteLine("\nVocê Ganhou!!! Pressione qualquer tecla para tentar novamente!");
+                    Console.WriteLine("\nVocê Ganhou!!! Pressione enter para tentar novamente!");
                     Console.ReadLine();
                     return;
                 }
                 if (erros == 5) {
-                    Console.WriteLine("\nVocê perdeu! Pressione qualquer tecla para tentar novamente!");
+                    Console.WriteLine("\nVocê perdeu! Pressione enter para tentar novamente!");
                     Console.ReadLine();
                     return;
                 }
 
                 Console.Write("\nQual o seu chute? ");
                 chute = Console.ReadLine().ToUpper();
-                exibicao = VerificaLetra(palavra, exibicao, chute, ref erros);
+                if (letrasUsadas.Contains(chute.ToCharArray()[0])) {
+                    Console.WriteLine("A letra já foi utilizada! Precione qualquer enter para continuar");
+                    Console.ReadLine();
+                }
+                else {
+                    letrasUsadas += chute[0];
+                    exibicao = VerificaLetra(palavra, exibicao, chute, ref erros);
+                }
+
                 Console.Clear();
             }
         }
