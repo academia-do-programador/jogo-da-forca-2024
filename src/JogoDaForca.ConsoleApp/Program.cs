@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Design;
+using System.Runtime.ExceptionServices;
 
 namespace JogoDaForca.ConsoleApp
 {
@@ -20,23 +21,36 @@ namespace JogoDaForca.ConsoleApp
         static int vidas = 5;
         static int acertos;
         static int acertosAnteriores;
-
+        static string palavraSorteada;
+        static int numeroEspacos;
+        static int indicePalavra;
         static void Main(string[] args)
         {
             ExibirTitulo();
 
-            int indicePalavra = IndiceAleatorio();
+            indicePalavra = IndiceAleatorio();
 
-            string palavraSorteada = SorteandoPalavra(indicePalavra);
+            palavraSorteada = SorteandoPalavra(indicePalavra);
 
             SeparandoEmChar(palavraSorteada);
 
-            int numeroEspacos = ArrayDeUnderline();
+            numeroEspacos = ArrayDeUnderline();
 
+            JogoCompleto();
+
+            DesejaContinuar();
+        }
+
+        ///Jogo Completo desde a parte de Coleta de letras digitadas pelo usuário até a parte de calculo de pontuação
+        ///Verificação de acertos e erros, desenho da forca e do boneco, etc.
+        #region Jogo Completo
+        private static void JogoCompleto()
+        {
             //rodando enquando ainda tiver chances
             while (vidas != 0)
             {
                 Console.WriteLine($"\nVidas Restantes: {vidas}");
+                DesenhandoForca();
                 Console.WriteLine(espacos);
 
                 Console.WriteLine("\nDigite uma Letra Maiúscula Aleatoria: ");
@@ -48,36 +62,131 @@ namespace JogoDaForca.ConsoleApp
                     {
                         espacos[j] = letrasPalavra[j];
                         acertos++;
+
+
                     }
 
                 }
 
-                ///verificando se foi erro, neste caso eu verifico se o numero de acertos anteriores permanece o mesmo
-                ///se continuar igual significa que o usuário errou, já que quando ele acerta é aumentada a variavel
-                ///acertos
-                if (acertosAnteriores == acertos)
-                {
-                    Console.WriteLine("Voce errou, Tente Novamente!");
-                    vidas--;
-                }
+                VerificaErro();
 
-                //verifica se o usuário acertou todas as letras
-                if (acertos == numeroEspacos)
-                {
-                    Console.WriteLine("Voce Adivinhou a Palavra, Parabéns!");
-                    break;
-                }
+                VerificaAcerto();
 
                 AtualizaAcertos();
             }
-
-            #region Desenhando a Forca
-            ////Desenhando a Forca
-            //Console.WriteLine("\n-------------------");
-            //Console.WriteLine("|/                |");
-            //Console.Write("|");
-            #endregion
         }
+        #endregion
+
+        private static void DesejaContinuar()
+        {
+            Console.WriteLine("Deseja Continuar? S/N");
+            string continuar = Console.ReadLine();
+
+
+
+            if(continuar == "S" || continuar == "s")
+            {
+                vidas = 5;
+                ExibirTitulo();
+                indicePalavra = IndiceAleatorio();
+                palavraSorteada = SorteandoPalavra(indicePalavra);
+                SeparandoEmChar(palavraSorteada);
+                numeroEspacos = ArrayDeUnderline();
+                JogoCompleto();
+                DesejaContinuar();
+            }
+            else if(continuar == "N" || continuar == "n")
+            {
+                Environment.ExitCode = 0;
+            }
+        }
+
+        #region Verifica se acertou a palavra completa
+        private static void VerificaAcerto()
+        {
+            int verificaPalavra = 0;
+
+            for(int i = 0; i < letrasPalavra.Length; i++)
+            {
+                if (letrasPalavra[i] == espacos[i])
+                {
+                    verificaPalavra++;
+                }
+            }
+            if (verificaPalavra == numeroEspacos)
+            {
+
+                Console.WriteLine("\nVocê Adivinhou a Palavra, Parabéns!");
+                Console.WriteLine($"A Palavra Escolhida era: {palavraSorteada}\n");
+                vidas = 0;
+            }
+        }
+        #endregion
+
+        #region Verifica se foi erro
+        private static void VerificaErro()
+        {
+            ///verificando se foi erro, neste caso eu verifico se o numero de acertos anteriores permanece o mesmo
+            ///se continuar igual significa que o usuário errou, já que quando ele acerta é aumentada a variavel
+            ///acertos
+            if (acertosAnteriores == acertos)
+            {
+                Console.WriteLine("Voce errou, Tente Novamente!");
+                vidas--;
+            }
+        }
+        #endregion
+
+        #region Desenhando a Forca
+        private static void DesenhandoForca()
+        {
+            //Desenhando a Forca
+            Console.WriteLine("\n __________");
+            Console.WriteLine(" |/       |");
+            DesenhaBoneco();
+            Console.WriteLine(" |");
+            Console.WriteLine(" |");
+            Console.WriteLine(" |");
+            Console.WriteLine("_|____\n");
+        }
+        #endregion
+
+        #region Desenha o Boneco
+        private static void DesenhaBoneco()
+        {
+            switch(vidas)
+            {
+                case 5:
+                    Console.WriteLine(" |");
+                    Console.WriteLine(" |");
+                    Console.WriteLine(" |");
+                    break;
+                case 4:
+                    Console.WriteLine(" |        O");
+                    Console.WriteLine(" |");
+                    Console.WriteLine(" |");
+                    break;
+                case 3:
+                    Console.WriteLine(" |        O");
+                    Console.WriteLine(" |        X");
+                    Console.WriteLine(" |");
+                    break;
+                case 2:
+                    Console.WriteLine(" |        O");
+                    Console.WriteLine(" |       [X] ");
+                    Console.WriteLine(" |");
+                    break;
+                case 1:
+                    Console.WriteLine(" |        O");
+                    Console.WriteLine(" |       [X] ");
+                    Console.WriteLine(" |        X");
+                    break;
+                default:
+                    Console.WriteLine();
+                    break ;
+            }
+        }
+        #endregion
 
         #region Exibir Titulo
         private static void ExibirTitulo()
@@ -103,7 +212,6 @@ namespace JogoDaForca.ConsoleApp
         {
             //salvando a palavra aleatoria em uma variavel
             string palavraSorteada = listaPalavras[indicePalavra];
-            Console.WriteLine($"A Palavra Escolhida era: {palavraSorteada}");
             return palavraSorteada;
         }
         #endregion
