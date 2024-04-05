@@ -133,6 +133,7 @@ namespace JogoDaForca.ConsoleApp
                 {
                     Console.Clear();
                     Console.WriteLine($"Parabéns! Você acertou a palavra: {palavraEscolhida}!");
+                    Console.ReadLine();
                     break;
                 }
 
@@ -140,6 +141,7 @@ namespace JogoDaForca.ConsoleApp
                 {
                     Console.Clear();
                     Console.WriteLine($"Você Perdeu! A palavra era: {palavraEscolhida}");
+                    Console.ReadLine();
                     break;
                 }
             }
