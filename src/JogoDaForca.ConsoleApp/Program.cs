@@ -22,9 +22,25 @@
 
             do
             {
-                Console.Clear();
+                string cabecaDoBoneco = quantidadeErros >= 1 ? " o " : " ";
+                string tronco = quantidadeErros >= 2 ? "x" : " ";
+                string troncoBaixo = quantidadeErros >= 2 ? " x " : " ";
+                string bracoEsquerdo = quantidadeErros >= 3 ? "/" : " ";
+                string bracoDireito = quantidadeErros >= 3 ? @"\" : " ";
+                string pernas = quantidadeErros >= 4 ? "/ \\" : " ";
 
-                Console.WriteLine(string.Join("", letrasEncontradas));
+                Console.Clear();
+                Console.WriteLine(" ___________        ");
+                Console.WriteLine(" |/        |        ");
+                Console.WriteLine(" |        {0}       ", cabecaDoBoneco);
+                Console.WriteLine(" |        {0}{1}{2} ", bracoEsquerdo, tronco, bracoDireito);
+                Console.WriteLine(" |        {0}       ", troncoBaixo);
+                Console.WriteLine(" |        {0}       ", pernas);
+                Console.WriteLine(" |                  ");
+                Console.WriteLine(" |                  ");
+                Console.WriteLine("_|____              ");
+
+                Console.WriteLine("\n" + string.Join("", letrasEncontradas));
 
                 // usuário irá chutar uma letra
                 Console.Write("Digite uma letra: ");
@@ -59,9 +75,6 @@
                 else if (jogadorEnforcou)
                     Console.WriteLine("\nQue azar! Tente novamente!");
 
-                // desenhar a forca
-
-                // revelar o enforcado conforme o usuário erra
             } while (jogadorEnforcou == false && jogadorAcertou == false);
 
             Console.ReadLine();
