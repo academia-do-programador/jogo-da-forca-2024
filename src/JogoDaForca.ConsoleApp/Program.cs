@@ -4,56 +4,31 @@
     {
         static void Main(string[] args)
         {
-            // o jogo acaba quando quantidadeErros = 5;
             int quantidadeErros = 0;
 
             bool jogadorEnforcou = false;
             bool jogadorAcertou = false;
 
-            // escolher uma palavra aleatória
-            string palavraEscolhida = "MELANCIA";
+            string palavraEscolhida = EscolherPalavraAleatoria();
 
-            char[] letrasEncontradas = new char[palavraEscolhida.Length];
+            char[] letrasEncontradas = InicializarLetrasEncontradas(palavraEscolhida);
 
-            for (int caractere = 0; caractere < letrasEncontradas.Length; caractere++)
-            {
-                letrasEncontradas[caractere] = '-';
-            }
+            string palavraEncontrada;
 
             do
             {
-                string cabecaDoBoneco = quantidadeErros >= 1 ? " o " : " ";
-                string tronco = quantidadeErros >= 2 ? "x" : " ";
-                string troncoBaixo = quantidadeErros >= 2 ? " x " : " ";
-                string bracoEsquerdo = quantidadeErros >= 3 ? "/" : " ";
-                string bracoDireito = quantidadeErros >= 3 ? @"\" : " ";
-                string pernas = quantidadeErros >= 4 ? "/ \\" : " ";
+                DesenharForca(quantidadeErros);
 
-                Console.Clear();
-                Console.WriteLine(" ___________        ");
-                Console.WriteLine(" |/        |        ");
-                Console.WriteLine(" |        {0}       ", cabecaDoBoneco);
-                Console.WriteLine(" |        {0}{1}{2} ", bracoEsquerdo, tronco, bracoDireito);
-                Console.WriteLine(" |        {0}       ", troncoBaixo);
-                Console.WriteLine(" |        {0}       ", pernas);
-                Console.WriteLine(" |                  ");
-                Console.WriteLine(" |                  ");
-                Console.WriteLine("_|____              ");
+                ExibirLetrasEncontradas(letrasEncontradas);
 
-                Console.WriteLine("\n" + string.Join("", letrasEncontradas));
+                char chute = ObterChute();
 
-                // usuário irá chutar uma letra
-                Console.Write("Digite uma letra: ");
-                char chute = Console.ReadLine()[0];
-
-                // checa se a letra está na palavra
                 bool letraFoiEncontrada = false;
 
                 for (int i = 0; i < palavraEscolhida.Length; i++)
                 {
                     char letraAtual = palavraEscolhida[i];
 
-                    // preenche o espaço da letra na palavra tracejada
                     if (chute == letraAtual)
                     {
                         letrasEncontradas[i] = letraAtual;
@@ -64,20 +39,116 @@
                 if (letraFoiEncontrada == false)
                     quantidadeErros++;
 
-                string palavraEncontrada = string.Join("", letrasEncontradas);
+                palavraEncontrada = string.Join("", letrasEncontradas);
 
-                jogadorAcertou = palavraEncontrada == palavraEscolhida;
-                jogadorEnforcou = quantidadeErros >= 5;
-
-                if (jogadorAcertou)
+                if (JogadorAcertou(palavraEscolhida, palavraEncontrada))
                     Console.WriteLine("\nVocê acertou a palavra secreta, parabéns!");
 
-                else if (jogadorEnforcou)
+                else if (JogadorPerdeu(quantidadeErros))
                     Console.WriteLine("\nQue azar! Tente novamente!");
 
-            } while (jogadorEnforcou == false && jogadorAcertou == false);
+            } while (JogadorAcertou(palavraEscolhida, palavraEncontrada) == false && JogadorPerdeu(quantidadeErros) == false);
 
             Console.ReadLine();
+        }
+
+        private static bool JogadorPerdeu(int quantidadeErros)
+        {
+            return quantidadeErros >= 5;
+        }
+
+        private static bool JogadorAcertou(string palavraEscolhida, string palavraEncontrada)
+        {
+            return palavraEncontrada == palavraEscolhida;
+        }
+
+        private static char ObterChute()
+        {
+            Console.Write("Digite uma letra: ");
+
+            char chute = Console.ReadLine()[0];
+
+            return chute;
+        }
+
+        private static void ExibirLetrasEncontradas(char[] letrasEncontradas)
+        {
+            Console.WriteLine("\n" + string.Join("", letrasEncontradas));
+        }
+
+        private static void DesenharForca(int quantidadeErros)
+        {
+            string cabecaDoBoneco = quantidadeErros >= 1 ? " o " : " ";
+            string tronco = quantidadeErros >= 2 ? "x" : " ";
+            string troncoBaixo = quantidadeErros >= 2 ? " x " : " ";
+            string bracoEsquerdo = quantidadeErros >= 3 ? "/" : " ";
+            string bracoDireito = quantidadeErros >= 3 ? @"\" : " ";
+            string pernas = quantidadeErros >= 4 ? "/ \\" : " ";
+
+            Console.Clear();
+            Console.WriteLine(" ___________        ");
+            Console.WriteLine(" |/        |        ");
+            Console.WriteLine(" |        {0}       ", cabecaDoBoneco);
+            Console.WriteLine(" |        {0}{1}{2} ", bracoEsquerdo, tronco, bracoDireito);
+            Console.WriteLine(" |        {0}       ", troncoBaixo);
+            Console.WriteLine(" |        {0}       ", pernas);
+            Console.WriteLine(" |                  ");
+            Console.WriteLine(" |                  ");
+            Console.WriteLine("_|____              ");
+        }
+
+        private static char[] InicializarLetrasEncontradas(string palavraEscolhida)
+        {
+            char[] letrasEncontradas = new char[palavraEscolhida.Length];
+
+            for (int caractere = 0; caractere < letrasEncontradas.Length; caractere++)
+            {
+                letrasEncontradas[caractere] = '-';
+            }
+
+            return letrasEncontradas;
+        }
+
+        private static string EscolherPalavraAleatoria()
+        {
+            string[] palavras = {
+                "ABACATE",
+                "ABACAXI",
+                "ACEROLA",
+                "ACAI",
+                "ARACA",
+                "ABACATE",
+                "BACABA",
+                "BACURI",
+                "BANANA",
+                "CAJA",
+                "CAJU",
+                "CARAMBOLA",
+                "CUPUACU",
+                "GRAVIOLA",
+                "GOIABA",
+                "JABUTICABA",
+                "JENIPAPO",
+                "MACA",
+                "MANGABA",
+                "MANGA",
+                "MARACUJA",
+                "MURICI",
+                "PEQUI",
+                "PITANGA",
+                "PITAYA",
+                "SAPOTI",
+                "TANGERINA",
+                "UMBU",
+                "UVA",
+                "UVAIA"
+            };
+
+            Random random = new Random();
+
+            int indiceEscolhido = random.Next(palavras.Length);
+
+            return palavras[indiceEscolhido];
         }
     }
 }
