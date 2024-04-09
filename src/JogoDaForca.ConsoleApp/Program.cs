@@ -1,272 +1,84 @@
-﻿using System;
-using System.ComponentModel.Design;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-namespace JogoDaForca.ConsoleApp
+﻿namespace JogoDaForca.ConsoleApp
 {
     internal class Program
     {
         static void Main(string[] args)
         {
+            // o jogo acaba quando quantidadeErros = 5;
+            int quantidadeErros = 0;
 
-            int tentativas = 0;
-            int erro = 0;
-            Random palavraForca = new Random();
-            int escolhePalavra = palavraForca.Next(1, 29);
-            string palavraEscolhida = "";
-            switch (escolhePalavra)
+            bool jogadorEnforcou = false;
+            bool jogadorAcertou = false;
+
+            // escolher uma palavra aleatória
+            string palavraEscolhida = "MELANCIA";
+
+            char[] letrasEncontradas = new char[palavraEscolhida.Length];
+
+            for (int caractere = 0; caractere < letrasEncontradas.Length; caractere++)
             {
-                case 1:
-                    palavraEscolhida = "ABACATE";
-                    break;
-
-                case 2:
-                    palavraEscolhida = "ABACAXI";
-                    break;
-
-                case 3:
-                    palavraEscolhida = "ACEROLA";
-                    break;
-
-                case 4:
-                    palavraEscolhida = "AÇAÍ";
-                    break;
-
-                case 5:
-                    palavraEscolhida = "ARAÇA";
-                    break;
-
-                case 6:
-                    palavraEscolhida = "BACABA";
-                    break;
-
-                case 7:
-                    palavraEscolhida = "BACURI";
-                    break;
-
-                case 8:
-                    palavraEscolhida = "BANANA";
-                    break;
-
-                case 9:
-                    palavraEscolhida = "CAJÁ";
-                    break;
-
-                case 10:
-                    palavraEscolhida = "CAJÚ";
-                    break;
-
-                case 11:
-                    palavraEscolhida = "CARAMBOLA";
-                    break;
-
-                case 12:
-                    palavraEscolhida = "CUPUAÇU";
-                    break;
-
-                case 13:
-                    palavraEscolhida = "GRAVIOLA";
-                    break;
-
-                case 14:
-                    palavraEscolhida = "GOIABA";
-                    break;
-
-                case 15:
-                    palavraEscolhida = "JABUTICABA";
-                    break;
-
-                case 16:
-                    palavraEscolhida = "JENIPAPO";
-                    break;
-
-                case 17:
-                    palavraEscolhida = "MAÇÃ";
-                    break;
-
-                case 18:
-                    palavraEscolhida = "MANGABA";
-                    break;
-
-                case 19:
-                    palavraEscolhida = "MANGA";
-                    break;
-
-                case 20:
-                    palavraEscolhida = "MARACUJÁ";
-                    break;
-
-                case 21:
-                    palavraEscolhida = "MURICI";
-                    break;
-
-                case 22:
-                    palavraEscolhida = "PEQUI";
-                    break;
-
-                case 23:
-                    palavraEscolhida = "PITANGA";
-                    break;
-
-                case 24:
-                    palavraEscolhida = "PITAYA";
-                    break;
-
-                case 25:
-                    palavraEscolhida = "SAPOTI";
-                    break;
-
-                case 26:
-                    palavraEscolhida = "TANGERINA";
-                    break;
-
-                case 27:
-                    palavraEscolhida = "UMBU";
-                    break;
-
-                case 28:
-                    palavraEscolhida = "UVA";
-                    break;
-
-                case 29:
-                    palavraEscolhida = "UVAIA";
-                    break;
+                letrasEncontradas[caractere] = '-';
             }
 
-            Console.WriteLine("BEM VINDO A FORCA 2024");
-            Console.WriteLine(" ___________ ");
-            Console.WriteLine(" |/        | ");
-            Console.WriteLine(" |           ");
-            Console.WriteLine(" |           ");
-            Console.WriteLine(" |           ");
-            Console.WriteLine(" |           ");
-            Console.WriteLine(" |           ");
-            Console.WriteLine(" |           ");
-            Console.WriteLine("_|____       ");
-
-            char[] palavraEscondida = esconderPalavra(palavraEscolhida);
-            while (tentativas != 0)
+            do
             {
-                
-                Console.Write(palavraEscondida);
-                Console.WriteLine("\nDigite uma letra: ");
-                char letra = char.ToUpper(Console.ReadLine()[0]);
-                if (palavraEscolhida.Contains(letra))
-                {
-                    for (int i = 0; i < palavraEscolhida.Length; i++)
-                    {
-                        if (palavraEscolhida[i] == letra)
-                        {
-                            palavraEscondida[i] = letra;
-                        }
-                        else 
-                        {
-                            tentativas--;
-                        }
+                string cabecaDoBoneco = quantidadeErros >= 1 ? " o " : " ";
+                string tronco = quantidadeErros >= 2 ? "x" : " ";
+                string troncoBaixo = quantidadeErros >= 2 ? " x " : " ";
+                string bracoEsquerdo = quantidadeErros >= 3 ? "/" : " ";
+                string bracoDireito = quantidadeErros >= 3 ? @"\" : " ";
+                string pernas = quantidadeErros >= 4 ? "/ \\" : " ";
 
+                Console.Clear();
+                Console.WriteLine(" ___________        ");
+                Console.WriteLine(" |/        |        ");
+                Console.WriteLine(" |        {0}       ", cabecaDoBoneco);
+                Console.WriteLine(" |        {0}{1}{2} ", bracoEsquerdo, tronco, bracoDireito);
+                Console.WriteLine(" |        {0}       ", troncoBaixo);
+                Console.WriteLine(" |        {0}       ", pernas);
+                Console.WriteLine(" |                  ");
+                Console.WriteLine(" |                  ");
+                Console.WriteLine("_|____              ");
+
+                Console.WriteLine("\n" + string.Join("", letrasEncontradas));
+
+                // usuário irá chutar uma letra
+                Console.Write("Digite uma letra: ");
+                char chute = Console.ReadLine()[0];
+
+                // checa se a letra está na palavra
+                bool letraFoiEncontrada = false;
+
+                for (int i = 0; i < palavraEscolhida.Length; i++)
+                {
+                    char letraAtual = palavraEscolhida[i];
+
+                    // preenche o espaço da letra na palavra tracejada
+                    if (chute == letraAtual)
+                    {
+                        letrasEncontradas[i] = letraAtual;
+                        letraFoiEncontrada = true;
                     }
                 }
-                if (string.Join("", palavraEscondida) == palavraEscolhida)
-                {
-                    Console.WriteLine("Parabéns, você acertou a palavra!!");
-                }
-               
 
-            }
-            
-Console.ReadKey();
+                if (letraFoiEncontrada == false)
+                    quantidadeErros++;
 
+                string palavraEncontrada = string.Join("", letrasEncontradas);
 
+                jogadorAcertou = palavraEncontrada == palavraEscolhida;
+                jogadorEnforcou = quantidadeErros >= 5;
 
+                if (jogadorAcertou)
+                    Console.WriteLine("\nVocê acertou a palavra secreta, parabéns!");
 
-            //switch (erro)
-            //{
-            //    case erro = 1;
-            //        {
-            //            Console.WriteLine(" ___________ ");
-            //            Console.WriteLine(" |/        | ");
-            //            Console.WriteLine(" |         O ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine("_|____       ");
-            //            break;
-            //        }
-            //    case erro = 2;
-            //        {
-            //            Console.WriteLine(" ___________ ");
-            //            Console.WriteLine(" |/        | ");
-            //            Console.WriteLine(" |         O ");
-            //            Console.WriteLine(" |         X ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine("_|____       ");
-            //        }
-            //    case erro = 3;
-            //        {
-            //            Console.WriteLine(" ___________ ");
-            //            Console.WriteLine(" |/        | ");
-            //            Console.WriteLine(" |         O ");
-            //            Console.WriteLine(" |         X ");
-            //            Console.WriteLine(" |         X ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine("_|____       ");
-            //        }
-            //    case erro = 4;
-            //        {
-            //            Console.WriteLine(" ___________ ");
-            //            Console.WriteLine(" |/        | ");
-            //            Console.WriteLine(" |         O ");
-            //            Console.WriteLine(" |        /X ");
-            //            Console.WriteLine(" |         X ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine("_|____       ");
-            //        }
-            //    case erro = 5;
-            //        {
-            //            Console.WriteLine(" ___________ ");
-            //            Console.WriteLine(" |/        | ");
-            //            Console.WriteLine(" |         O ");
-            //            Console.WriteLine(" |        /X\\ ");
-            //            Console.WriteLine(" |         X ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine(" |           ");
-            //            Console.WriteLine("_|____       ");
-            //            Console.WriteLine("GAME OVER A PALAVRA ERA: " + palavraEscolhida);
-            //        }
+                else if (jogadorEnforcou)
+                    Console.WriteLine("\nQue azar! Tente novamente!");
 
-        }
+            } while (jogadorEnforcou == false && jogadorAcertou == false);
 
-        public static char[] esconderPalavra(string palavraEscolhida)
-        {
-            char[] palavraEscondida = palavraEscolhida.ToCharArray();
-            for (int i = 0; i < palavraEscondida.Length; i++)
-            {
-                palavraEscondida[i] = '_';
-            }
-            return palavraEscondida;
-
-
+            Console.ReadLine();
         }
     }
-    
 }
-    
-
-
-
-
-
-        
-    
-
 
