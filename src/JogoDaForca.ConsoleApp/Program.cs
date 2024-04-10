@@ -4,64 +4,29 @@
     {
         static void Main(string[] args)
         {
-            int quantidadeErros = 0;
+            Forca forca = new Forca();
 
-            bool jogadorEnforcou = false;
-            bool jogadorAcertou = false;
+            forca.EscolherPalavraAleatoria();
+            forca.InicializarLetrasEncontradas();
 
-            string palavraEscolhida = EscolherPalavraAleatoria();
-
-            char[] letrasEncontradas = InicializarLetrasEncontradas(palavraEscolhida);
-
-            string palavraEncontrada;
-
-            do
+            while (true)
             {
-                DesenharForca(quantidadeErros);
+                DesenharForca(forca.quantidadeErros);
 
-                ExibirLetrasEncontradas(letrasEncontradas);
+                ExibirLetrasEncontradas(forca.letrasEncontradas);
 
                 char chute = ObterChute();
 
-                bool letraFoiEncontrada = false;
-
-                for (int i = 0; i < palavraEscolhida.Length; i++)
+                if (forca.JogadorAcertou(chute) || forca.JogadorPerdeu())
                 {
-                    char letraAtual = palavraEscolhida[i];
-
-                    if (chute == letraAtual)
-                    {
-                        letrasEncontradas[i] = letraAtual;
-                        letraFoiEncontrada = true;
-                    }
+                    Console.WriteLine(forca.mensagemFinal);
+                    break;
                 }
-
-                if (letraFoiEncontrada == false)
-                    quantidadeErros++;
-
-                palavraEncontrada = string.Join("", letrasEncontradas);
-
-                if (JogadorAcertou(palavraEscolhida, palavraEncontrada))
-                    Console.WriteLine("\nVocê acertou a palavra secreta, parabéns!");
-
-                else if (JogadorPerdeu(quantidadeErros))
-                    Console.WriteLine("\nQue azar! Tente novamente!");
-
-            } while (JogadorAcertou(palavraEscolhida, palavraEncontrada) == false && JogadorPerdeu(quantidadeErros) == false);
+            };
 
             Console.ReadLine();
         }
-
-        private static bool JogadorPerdeu(int quantidadeErros)
-        {
-            return quantidadeErros >= 5;
-        }
-
-        private static bool JogadorAcertou(string palavraEscolhida, string palavraEncontrada)
-        {
-            return palavraEncontrada == palavraEscolhida;
-        }
-
+      
         private static char ObterChute()
         {
             Console.Write("Digite uma letra: ");
@@ -95,60 +60,6 @@
             Console.WriteLine(" |                  ");
             Console.WriteLine(" |                  ");
             Console.WriteLine("_|____              ");
-        }
-
-        private static char[] InicializarLetrasEncontradas(string palavraEscolhida)
-        {
-            char[] letrasEncontradas = new char[palavraEscolhida.Length];
-
-            for (int caractere = 0; caractere < letrasEncontradas.Length; caractere++)
-            {
-                letrasEncontradas[caractere] = '-';
-            }
-
-            return letrasEncontradas;
-        }
-
-        private static string EscolherPalavraAleatoria()
-        {
-            string[] palavras = {
-                "ABACATE",
-                "ABACAXI",
-                "ACEROLA",
-                "ACAI",
-                "ARACA",
-                "ABACATE",
-                "BACABA",
-                "BACURI",
-                "BANANA",
-                "CAJA",
-                "CAJU",
-                "CARAMBOLA",
-                "CUPUACU",
-                "GRAVIOLA",
-                "GOIABA",
-                "JABUTICABA",
-                "JENIPAPO",
-                "MACA",
-                "MANGABA",
-                "MANGA",
-                "MARACUJA",
-                "MURICI",
-                "PEQUI",
-                "PITANGA",
-                "PITAYA",
-                "SAPOTI",
-                "TANGERINA",
-                "UMBU",
-                "UVA",
-                "UVAIA"
-            };
-
-            Random random = new Random();
-
-            int indiceEscolhido = random.Next(palavras.Length);
-
-            return palavras[indiceEscolhido];
         }
     }
 }
