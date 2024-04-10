@@ -4,81 +4,42 @@
     {
         static void Main(string[] args)
         {
-            // o jogo acaba quando quantidadeErros = 5;
-            int quantidadeErros = 0;
-
-            bool jogadorEnforcou = false;
-            bool jogadorAcertou = false;
-
-            // escolher uma palavra aleatória
-            string palavraEscolhida = "MELANCIA";
-
-            char[] letrasEncontradas = new char[palavraEscolhida.Length];
-
-            for (int caractere = 0; caractere < letrasEncontradas.Length; caractere++)
-            {
-                letrasEncontradas[caractere] = '-';
-            }
-
+            Forca forca1 = new Forca();
             do
             {
-                string cabecaDoBoneco = quantidadeErros >= 1 ? " o " : " ";
-                string tronco = quantidadeErros >= 2 ? "x" : " ";
-                string troncoBaixo = quantidadeErros >= 2 ? " x " : " ";
-                string bracoEsquerdo = quantidadeErros >= 3 ? "/" : " ";
-                string bracoDireito = quantidadeErros >= 3 ? @"\" : " ";
-                string pernas = quantidadeErros >= 4 ? "/ \\" : " ";
+                forca1.Desenho();
+                forca1.EscolherPalavra();
+                forca1.Chute();
 
-                Console.Clear();
-                Console.WriteLine(" ___________        ");
-                Console.WriteLine(" |/        |        ");
-                Console.WriteLine(" |        {0}       ", cabecaDoBoneco);
-                Console.WriteLine(" |        {0}{1}{2} ", bracoEsquerdo, tronco, bracoDireito);
-                Console.WriteLine(" |        {0}       ", troncoBaixo);
-                Console.WriteLine(" |        {0}       ", pernas);
-                Console.WriteLine(" |                  ");
-                Console.WriteLine(" |                  ");
-                Console.WriteLine("_|____              ");
-
-                Console.WriteLine("\n" + string.Join("", letrasEncontradas));
-
-                // usuário irá chutar uma letra
-                Console.Write("Digite uma letra: ");
-                char chute = Console.ReadLine()[0];
-
-                // checa se a letra está na palavra
                 bool letraFoiEncontrada = false;
 
-                for (int i = 0; i < palavraEscolhida.Length; i++)
+                for (int i = 0; i < forca1.EscolherPalavra().Length; i++)
                 {
-                    char letraAtual = palavraEscolhida[i];
+                    char letraAtual = forca1.letrasEncontradas[i];
 
-                    // preenche o espaço da letra na palavra tracejada
-                    if (chute == letraAtual)
+                    if (forca1.chute == letraAtual)
                     {
-                        letrasEncontradas[i] = letraAtual;
+                        forca1.letrasEncontradas[i] = letraAtual;
                         letraFoiEncontrada = true;
                     }
                 }
 
                 if (letraFoiEncontrada == false)
-                    quantidadeErros++;
+                    forca1.quantidadeErros++;
 
-                string palavraEncontrada = string.Join("", letrasEncontradas);
+                forca1.palavraEncontrada = string.Join("", forca1.letrasEncontradas);
 
-                jogadorAcertou = palavraEncontrada == palavraEscolhida;
-                jogadorEnforcou = quantidadeErros >= 5;
-
-                if (jogadorAcertou)
+                if (forca1.palavraEncontrada == forca1.palavraAchada)
                     Console.WriteLine("\nVocê acertou a palavra secreta, parabéns!");
 
-                else if (jogadorEnforcou)
+                else if (forca1.quantidadeErros > 5)
                     Console.WriteLine("\nQue azar! Tente novamente!");
 
-            } while (jogadorEnforcou == false && jogadorAcertou == false);
+            } while (forca1.quantidadeErros > 5);
 
             Console.ReadLine();
+
+
         }
     }
 }
-
